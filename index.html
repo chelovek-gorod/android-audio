@@ -9,66 +9,30 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
         <!-- styles -->
         <style>
-
+            body{
+                height: 100vh;
+                width: 100vw;
+            }
         </style>
     </head>
     <body>
-            v 0.005
+        v 0.009
         <script>
             const audioPlay = (() => {
-                let context = null;
-                return async url => {
-                    if (context) context.close();
-                    context = new AudioContext();
-                    const source = context.createBufferSource();
-                    source.buffer = await fetch(url)
-                    .then(res => res.arrayBuffer())
-                    .then(arrayBuffer => context.decodeAudioData(arrayBuffer));
-                    source.connect(context.destination);
-                    source.start();
-                };
+            let context = null;
+            return async url => {
+                if (context) context.close();
+                context = new AudioContext();
+                const source = context.createBufferSource();
+                source.buffer = await fetch(url)
+                .then(res => res.arrayBuffer())
+                .then(arrayBuffer => context.decodeAudioData(arrayBuffer));
+                source.connect(context.destination);
+                source.start();
+            };
             })();
-        
-            document.querySelector('#start').onclick = () => audioPlay('./bgm.mp3');
-        
-            /*
-            // for cross browser
-            const AudioContext = window.AudioContext || window.webkitAudioContext;
-            let audioCtx = null;
 
-            let isPlay = false;
-
-            // load some sound
-            const audioSrc = './bgm.mp3';
-            const audio = new Audio(audioSrc);
-            //audio.crossOrigin = "anonymous";
-
-            // ? load -> then...
-            let track = null;
-
-            // play pause audio
-            document.addEventListener('click', function() {
-                if (!audioCtx) {
-                    audioCtx = new AudioContext();
-                    const track = audioCtx.createMediaElementSource(audio);
-                    track.connect(audioCtx.destination);
-                }
-                
-                // check if context is in suspended state (autoplay policy)
-                if (audioCtx.state === 'suspended') {
-                    audioCtx.resume();
-                }
-                
-                if (!isPlay) {
-                    isPlay = true;
-                    audio.play();
-                // if track is playing pause it
-                } else if (isPlay) {
-                    isPlay = false;
-                    audio.pause();
-                }
-            }, false);
-            */
+            document.body.onclick = () => audioPlay('./bgm.mp3');
         </script>
     </body>
 </html>
