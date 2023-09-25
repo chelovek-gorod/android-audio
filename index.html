@@ -13,7 +13,20 @@
         </style>
     </head>
     <body>
+            v 0.003
         <script>
+            document.body.onclick = () => {
+                let context = new AudioContext();
+                const source = context.createBufferSource();
+                const data = fetch('./bgm.mp3');
+                data.then(res => res.arrayBuffer())
+                    .then(arrayBuffer => context.decodeAudioData(arrayBuffer));
+                source.connect(context.destination);
+                source.start();
+
+            };
+        </script>
+            /*
             // for cross browser
             const AudioContext = window.AudioContext || window.webkitAudioContext;
             let audioCtx = null;
@@ -50,7 +63,7 @@
                     audio.pause();
                 }
             }, false);
-
+            */
         </script>
     </body>
 </html>
