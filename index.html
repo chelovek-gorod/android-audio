@@ -16,23 +16,32 @@
         </style>
     </head>
     <body>
-        v 0.009
+        v 0.012
         <script>
-            const audioPlay = (() => {
-            let context = null;
-            return async url => {
-                if (context) context.close();
-                context = new AudioContext();
-                const source = context.createBufferSource();
-                source.buffer = await fetch(url)
-                .then(res => res.arrayBuffer())
-                .then(arrayBuffer => context.decodeAudioData(arrayBuffer));
-                source.connect(context.destination);
-                source.start();
-            };
-            })();
+            let isTrackReady = false;
 
-            document.body.onclick = () => audioPlay('./bgm.mp3');
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            const audioCtx = new AudioContext();
+
+            const gainNode = audioCtx.createGain();
+            gainNode.gain.value = 0.05;
+
+            const track = audioCtx.createBufferSource();
+
+            fetch('./bgm.mp3')
+                .then(res => res.arrayBuffer())
+                .then(arrayBuffer => audioCtx.decodeAudioData(arrayBuffer))
+                .then(audioData => {
+                    track.buffer = audioData;
+                    track.connect(gainNode).connect(audioCtx.destination);
+                    isTrackReady = true;
+                });
+
+            document.body.onclick = () => {
+                if (!isTrackReady) return;
+
+                track.start();
+            };
         </script>
     </body>
 </html>
