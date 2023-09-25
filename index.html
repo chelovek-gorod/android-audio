@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en_US">
+    <head>
+        <meta charset="UTF-8">
+        <!-- title and description -->
+        <title>Title</title>
+        <meta name="description" content="Description content.">
+        <!-- viewport -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+        <!-- styles -->
+        <style>
+
+        </style>
+    </head>
+    <body>
+        <script>
+            // for cross browser
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            let audioCtx = null;
+
+            let isPlay = false;
+
+            // load some sound
+            const audioSrc = './bgm.mp3';
+            const audio = new Audio(audioSrc);
+            //audio.crossOrigin = "anonymous";
+
+            // ? load -> then...
+            let track = null;
+
+            // play pause audio
+            document.addEventListener('click', function() {
+                if (!audioCtx) {
+                    audioCtx = new AudioContext();
+                    const track = audioCtx.createMediaElementSource(audio);
+                    track.connect(audioCtx.destination);
+                }
+                
+                // check if context is in suspended state (autoplay policy)
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                
+                if (!isPlay) {
+                    isPlay = true;
+                    audio.play();
+                // if track is playing pause it
+                } else if (isPlay) {
+                    isPlay = false;
+                    audio.pause();
+                }
+            }, false);
+
+        </script>
+    </body>
+</html>
